@@ -2,16 +2,8 @@
 
 Tested on Debian 11. Here are the steps to reproduce the exploit:
 
-1. First we need to disable a couple of security features that prevent this
-   kind of exploit. Disable the Address Space Layout Randomization on your
-   system to have security_critical_function at a deterministic address with
-   the following command:
-```
-echo 0 | sudo tee /proc/sys/kernel/randomize_va_space
-```
-
-   Next we compile without the stack protector, and we create a static
-   binary to have `security_critical_function` at an easily identifiable
+1. First we compile the program without the stack protector, and we create a
+   static binary to have `security_critical_function` at an easily identifiable
    location:
 ```
 gcc -fno-stack-protector hackme.c -g -o hackme -static
@@ -86,9 +78,4 @@ gcc -fno-stack-protector hackme.c -g -o hackme -static
    Notice how we have 24 bytes of garbage (`\x11`) and then the address of
    `security_critical_function` that will overwrite the return address:
    `\x8d\x1c\x40\x00\x00\x00\x00\x00`
-
-Don't forget to re-enable ASLR when you are done:
 ```
-echo 2 | sudo tee /proc/sys/kernel/randomize_va_space
-```
-
