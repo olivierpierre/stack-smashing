@@ -78,4 +78,3 @@ gcc -fno-stack-protector hackme.c -g -o hackme -static
    Notice how we have 24 bytes of garbage (`\x11`) and then the address of
    `security_critical_function` that will overwrite the return address:
    `\x8d\x1c\x40\x00\x00\x00\x00\x00`
-```
